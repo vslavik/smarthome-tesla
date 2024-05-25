@@ -1,0 +1,7 @@
+services:
+  tesla:
+    ports:
+      - 8000:8000
+    build:
+      dockerfile: Dockerfile
+      context: .

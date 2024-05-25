@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "smarthome-tesla"
+version = "0.0.1"
+description = ""
+authors = ["Václav Slavík <vaclav@slavik.io>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.110.2"
+uvicorn = "^0.29.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
