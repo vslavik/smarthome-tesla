@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   tesla:
     ports:
@@ -5,3 +7,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
+    volumes:
+      - tesla-db:/data
+
+volumes:
+    tesla-db:

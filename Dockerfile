@@ -10,6 +10,10 @@ RUN go get ./... && go build ./... && go install ./cmd/...
 
 
 FROM python:3.12-slim-bookworm AS pyapp
+
+RUN mkdir /data
+ENV TESLA_HOME /data
+
 WORKDIR /app
 
 RUN apt-get update && apt-get -y install bluez
@@ -22,7 +26,7 @@ COPY --from=gotools /go/bin/* /usr/local/bin/
 COPY pyproject.toml poetry.lock ./
 RUN poetry install
 
-COPY main.py ./
+COPY teslabox teslabox/
 
 EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "teslabox.main:app", "--host", "0.0.0.0", "--port", "8000"]
