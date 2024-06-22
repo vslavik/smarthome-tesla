@@ -11,6 +11,7 @@ class TeslaClient:
         logger.info(f"initializing Tesla library with data directory: {data_dir}")
         self.home = Path(data_dir)
         self.home.mkdir(parents=True, exist_ok=True)
+        self._ble_lock = asyncio.Lock()
 
         # ensure private key existence:
         if not self._private_key_path.is_file():
@@ -45,9 +46,10 @@ class TeslaClient:
             args += ["-vin", vin]
         args.append(command)
         args += command_args
-        logger.info(f"executing tesla-control {' '.join(str(x) for x in args)}")
-        process = await asyncio.create_subprocess_exec("tesla-control", *args)
-        return await process.wait() == 0
+        async with self._ble_lock:
+            logger.info(f"executing tesla-control {' '.join(str(x) for x in args)}")
+            process = await asyncio.create_subprocess_exec("tesla-control", *args)
+            return await process.wait() == 0
 
     async def wake(self, vin):
         logger.info(f"waking up vehicle {vin}")
