@@ -35,7 +35,7 @@ class TeslaClient:
         return self.home / "tesla-cache.json"
 
     async def _tesla_control(self, command, *command_args, private_key=True, ble=True, domain=None, vin=None):
-        args = ["-session-cache", self._cache_path]
+        args = ["-debug", "-session-cache", self._cache_path]
         if private_key:
             args += ["-key-file", self._private_key_path]
         if ble:
@@ -48,8 +48,16 @@ class TeslaClient:
         args += command_args
         async with self._ble_lock:
             logger.info(f"executing tesla-control {' '.join(str(x) for x in args)}")
-            process = await asyncio.create_subprocess_exec("tesla-control", *args)
-            return await process.wait() == 0
+            process = await asyncio.create_subprocess_exec("tesla-control", *args,
+                                                           stdout=asyncio.subprocess.PIPE,
+                                                           stderr=asyncio.subprocess.PIPE)
+            stdout, stderr = await process.communicate()
+            logger.info(f"tesla-control finished with {process.returncode}")
+            for line in stdout.decode().splitlines():
+                logger.info(f"| stdout: {line}")
+            for line in stderr.decode().splitlines():
+                logger.info(f"| stderr: {line}")
+            return process.returncode == 0
 
     async def wake(self, vin):
         logger.info(f"waking up vehicle {vin}")
