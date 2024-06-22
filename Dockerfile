@@ -12,7 +12,7 @@ RUN go get ./... && go build ./... && go install ./cmd/...
 FROM python:3.12-slim-bookworm AS pyapp
 
 RUN mkdir /data
-ENV TESLA_HOME /data
+ENV TESLA_HOME=/data
 
 WORKDIR /app
 
