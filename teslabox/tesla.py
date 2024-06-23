@@ -35,7 +35,7 @@ class TeslaClient:
         return self.home / "tesla-cache.json"
 
     async def _tesla_control(self, command, *command_args, private_key=True, ble=True, domain=None, vin=None):
-        args = ["-debug", "-session-cache", self._cache_path]
+        args = ["-debug", "-session-cache", self._cache_path, "-command-timeout", "30s"]
         if private_key:
             args += ["-key-file", self._private_key_path]
         if ble:
