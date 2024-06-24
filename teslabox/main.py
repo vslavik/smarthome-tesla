@@ -24,6 +24,13 @@ async def root():
     return {"message": "Hello World"}
 
 
+@app.get("/api/{vin}/wake")
+@app.post("/api/{vin}/wake")
+async def wake_vehicle(vin: str):
+    retval = await g.tesla_client.wake(vin)
+    return {"success": bool(retval)}
+
+
 @app.get("/api/{vin}/open-charge-port")
 @app.post("/api/{vin}/open-charge-port")
 async def open_charge_port(vin: str):
