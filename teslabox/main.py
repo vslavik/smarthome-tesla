@@ -24,13 +24,13 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/api/1/vehicles/{vin}/wake_up")
+@app.post("/api/1/vehicles/{vin}/command/wake_up")
 async def wake_vehicle(vin: str):
     retval = await g.tesla_client.wake(vin)
     return {"success": bool(retval)}
 
 
-@app.post("/api/1/vehicles/{vin}/charge_port_door_open")
+@app.post("/api/1/vehicles/{vin}/command/charge_port_door_open")
 async def open_charge_port(vin: str):
     retval = await g.tesla_client.open_charge_port(vin)
     return {"success": bool(retval)}
